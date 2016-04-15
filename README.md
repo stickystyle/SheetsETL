@@ -6,7 +6,7 @@ This serves as a simple ETL tool that the spreadsheet type people can then slice
 **Setup**
 
 1. Checkout repo
-    - `$git clone git@bitbucket.org:ryan_parrish/sheets-query.git`
+    - `$git clone https://github.com/stickystyle/SheetsETL.git`
 2. Create VirtualEnv within the checked out folder
     - `$virtualenv create venv`
 3. Activate the VirtualEnv
@@ -32,6 +32,6 @@ Simply execute the `loader.py` script with the VirtualEnv activated.
 It can also be ran (in cases such as CRON) within a wrapper script like so...  
 
     #!/bin/bash
-    cd /opt/sheets-query
+    cd /opt/SheetsETL
     source venv/bin/activate
     python loader.py

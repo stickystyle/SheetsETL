@@ -42,7 +42,18 @@ It can also be ran easily (in cases such as CRON) within a wrapper script like s
     source venv/bin/activate
     python loader.py
 
+Additionally there is a Docker image [stickystyle/sheetsetl](https://hub.docker.com/r/stickystyle/sheetsetl/) that
+ can be used. Simply pull the image and start a container with the appropriate env vars set.
 
+    $docker run -it --rm --name SheetsETL \
+      MYSQL_HOST=db.example.com \
+      MYSQL_PORT=3306 \
+      MYSQL_DB=my_database \
+      MYSQL_USER=db_user \
+      MYSQL_PASSWD=ASweetPassword \
+      SQL_SOURCE=0B_jczERcXKwsUEt5dGtrV1h4Y1E \
+      SHEET_DEST=0B_jczERcXKwsYzVsNHFIMDktZ2c \
+      stickystyle/sheetsetl
 
 **Limitations**
 

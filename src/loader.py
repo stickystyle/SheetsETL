@@ -25,6 +25,8 @@ except ImportError:
     # Not using dotenv, assuming that ENV vars are already setup
     pass
 
+__author__ = "Ryan Parrish <ryan@stickystyle.net>"
+
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata',
           'https://www.googleapis.com/auth/drive.file',
           'https://www.googleapis.com/auth/drive.readonly']
@@ -59,6 +61,7 @@ connection = pymysql.connect(host=os.environ.get("MYSQL_HOST"),
 def convert_size(size):
     """
     http://stackoverflow.com/a/18650828/959342
+
     :param size: Size in bytes to convert
     :return: String representation of the size
     :rtype: str
@@ -78,8 +81,7 @@ def get_credentials():
     If nothing has been stored, or if the stored credentials are invalid,
     the OAuth2 flow is completed to obtain the new credentials.
 
-    Returns:
-        Credentials, the obtained credential.
+    :return: Credentials, the obtained credential.
     """
     home_dir = os.path.expanduser('~')
     credential_dir = os.path.join(home_dir, '.credentials')
@@ -103,8 +105,8 @@ def get_credentials():
 def get_files_in_folder(folder_id):
     """Print files belonging to a folder.
 
-    Args:
-      folder_id: ID of the folder to list files from.
+    :param folder_id: ID of the folder to list files from.
+    :return: Iterator for files in a google drive folder
     """
     service = discovery.build('drive', 'v3', requestBuilder=build_request)
     page_token = None
@@ -123,8 +125,8 @@ def get_files_in_folder(folder_id):
 def download_file(file_id):
     """Download a file from google drive.
 
-    Args:
-      file_id: ID of the file to download.
+    :param file_id: ID of the file to download.
+    :return: Content of file downloaded
     """
     service = discovery.build('drive', 'v3', requestBuilder=build_request)
     request = service.files().get_media(fileId=file_id)
@@ -142,10 +144,9 @@ def download_file(file_id):
 def upload_file(file_ref, file_source, file_folder):
     """Upload and convert the CSV file
 
-    Args:
-      file_ref: Dict containing metadata about file
-      file_source: File like object to upload
-      file_folder: Folder to place resulting google sheets into.
+    :param file_ref: Dict containing metadata about file
+    :param file_source: File like object to upload
+    :param file_folder: Folder to place resulting google sheets into.
     """
     service = discovery.build('drive', 'v3', requestBuilder=build_request)
     file_metadata = {'name': file_ref['name'].replace('.sql', ''),
@@ -188,11 +189,18 @@ def get_sql_files():
     pass
 
 
-# Create a new Http() object for every request
-def build_request(http, *args, **kwargs):
+def build_request(*args, **kwargs):
+    """
+    Create a new Http() object for every request, needed because httplib2 is not threadsafe.
+    https://developers.google.com/api-client-library/python/guide/thread_safety
+
+    :param args:
+    :param kwargs:
+    :return: Http() object to use in the service builder
+    :rtype: apiclient.http.HttpRequest
+    """
     credentials = get_credentials()
     new_http = credentials.authorize(httplib2.Http())
-    # new_http = httplib2.Http()
     return apiclient.http.HttpRequest(new_http, *args, **kwargs)
 
 

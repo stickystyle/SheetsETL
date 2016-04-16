@@ -185,8 +185,20 @@ def upload_file(file_ref, file_source, file_folder):
     logger.info('File finished loading')
 
 
-def get_sql_files():
-    pass
+def get_sql_files(folder_id):
+    """Download a file from google drive.
+
+    :param folder_id: ID of the folder to search for SQL files
+    """
+    queries = []
+    for ff in get_files_in_folder(folder_id=folder_id):
+        logger.debug("Found file %s in %s", ff.get('name'), SQL_SOURCE)
+        if (ff.get('mimeType') in ('text/plain', 'text/x-sql')) and ('.sql' in ff.get('name')):
+            logger.info("Found valid SQL file %s", ff.get('name'))
+            sql_file = download_file(file_id=ff.get('id'))
+            ff['q'] = sql_file
+            queries.append(ff)
+    return queries
 
 
 def build_request(*args, **kwargs):
@@ -206,15 +218,7 @@ def build_request(*args, **kwargs):
 
 def main():
     logger.info("Starting process")
-    queries = []
-
-    for ff in get_files_in_folder(folder_id=SQL_SOURCE):
-        logger.debug("Found file %s in %s", ff.get('name'), SQL_SOURCE)
-        if (ff.get('mimeType') in ('text/plain', 'text/x-sql')) and ('.sql' in ff.get('name')):
-            logger.info("Found valid SQL file %s", ff.get('name'))
-            sql_file = download_file(file_id=ff.get('id'))
-            ff['q'] = sql_file
-            queries.append(ff)
+    queries = get_sql_files(folder_id=SQL_SOURCE)
 
     for query in queries:
         with connection.cursor() as cursor:

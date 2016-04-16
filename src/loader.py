@@ -30,7 +30,7 @@ __author__ = "Ryan Parrish <ryan@stickystyle.net>"
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata',
           'https://www.googleapis.com/auth/drive.file',
           'https://www.googleapis.com/auth/drive.readonly']
-CLIENT_SECRET_FILE = 'client_secrets.json'
+CLIENT_SECRET_FILE = os.environ.get('CLIENT_SECRET_FILE') or 'client_secrets.json'
 APPLICATION_NAME = 'SheetsETL'
 
 SQL_SOURCE = os.environ.get("SQL_SOURCE")
@@ -38,7 +38,7 @@ SHEET_DEST = os.environ.get("SHEET_DEST")
 
 logger = logging.getLogger(__name__)
 rootlogger = logging.getLogger()
-rootlogger.setLevel(logging.getLevelName(str(os.environ.get('LOG_LEVEL')).upper()))
+rootlogger.setLevel(logging.getLevelName(str(os.environ.get('LOG_LEVEL') or 'INFO').upper()))
 ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')

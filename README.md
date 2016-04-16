@@ -5,15 +5,12 @@ This serves as a simple ETL tool that the spreadsheet type people can then slice
 
 **Setup**
 
-1. Checkout repo
-    - `$git clone https://github.com/stickystyle/SheetsETL.git`
-2. Create VirtualEnv within the checked out folder
-    - `$virtualenv create venv`
-3. Activate the VirtualEnv
-    - `$source venv/bin/activate`
-4. Install the requirements
+1. Setup your OAUTH 2.0 [server-side flow](https://developers.google.com/drive/v2/web/auth/web-server) in the Google devleopers console.
+When you've finished the setup at Google, place the `client_secrets.json` file you downloaded in the directory with
+ `loader.py`
+2. Install the requirements
     - `$pip install -r requirements.txt`
-5. Create the .env to store your environmental variables if they don't exist in your env...
+3. Create the .env to store your environmental variables if they don't exist in your env...
     - SQL_SOURCE is the google drive folder id where the source SQL files live
     - SHEET_DEST is the google drive folder id where the generated sheets will be written to
     - MYSQL_HOST is the location of the MySQL server you want to query
@@ -29,7 +26,7 @@ This serves as a simple ETL tool that the spreadsheet type people can then slice
     `MYSQL_PASSWD=ASweetPassword`  
     `SQL_SOURCE=0B_jczERcXKwsUEt5dGtrV1h4Y1E`
     `SHEET_DEST=0B_jczERcXKwsYzVsNHFIMDktZ2c`
-6. Optional, install [Drive Notepad](https://chrome.google.com/webstore/detail/drive-notepad/gpgjomejfimnbmobcocilppikhncegaj?hl=en-GB) to make editing of SQL files easier within Chrome.
+6. Optional, install [Drive Notepad](https://chrome.google.com/webstore/detail/drive-notepad/gpgjomejfimnbmobcocilppikhncegaj) to make editing of SQL files easier directly in the google drive web interface.
 
 **Usage**
 
@@ -37,16 +34,17 @@ Create a plain text file with the .sql extension in the `SQL_SOURCE`, then run t
 The script will iterate through all .sql files in the `SQL_SOURCE` folder, execute the query contained
 in the file, then create a native Google Sheet in the `SHEET_DEST` folder containing the results of the query.
 
-
-**Loading data**
-
-Simply execute the `loader.py` script with the VirtualEnv activated.  
 It can also be ran easily (in cases such as CRON) within a wrapper script like so...
 
     #!/bin/bash
     cd /opt/SheetsETL
     source venv/bin/activate
     python loader.py
+
+**Limitations**
+
+Google sheets has a limitation of two million cells per spreadsheet, this includes all of the sheets ('tabs')
+that exist in the spreadsheet. So be mindful of the amount of rows and columns your query returns.
 
 **Security Notice**
 

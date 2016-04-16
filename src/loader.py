@@ -25,10 +25,6 @@ except ImportError:
     # Not using dotenv, assuming that ENV vars are already setup
     pass
 
-# TODO: setup.py with entrypoints
-
-# If modifying these scopes, delete your previously saved credentials
-# at ~/.credentials/drive-sheets-loader.json
 SCOPES = ['https://www.googleapis.com/auth/drive.metadata',
           'https://www.googleapis.com/auth/drive.file',
           'https://www.googleapis.com/auth/drive.readonly']
@@ -62,6 +58,7 @@ connection = pymysql.connect(host=os.environ.get("MYSQL_HOST"),
 
 def convert_size(size):
     """
+    http://stackoverflow.com/a/18650828/959342
     :param size: Size in bytes to convert
     :return: String representation of the size
     :rtype: str

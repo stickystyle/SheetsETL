@@ -8,6 +8,7 @@ import logging
 import csv
 import sys
 import math
+import argparse
 
 import pymysql
 
@@ -95,8 +96,11 @@ def get_credentials():
     if not credentials or credentials.invalid:
         flow = client.flow_from_clientsecrets(CLIENT_SECRET_FILE, SCOPES)
         flow.user_agent = APPLICATION_NAME
-        flags = tools.argparser.parse_args(args=['noauth_local_webserver'])
-        tools.run_flow(flow, store, flags=flags)
+        # parser = argparse.ArgumentParser(
+        #     formatter_class=argparse.RawDescriptionHelpFormatter,
+        #     parents=[tools.argparser])
+        # flags = parser.parse_args(args=['noauth_local_webserver'])
+        tools.run_flow(flow, store)
         logger.info('Storing credentials to %s', credential_path)
         logger.info('Please run the script again')
         sys.exit()

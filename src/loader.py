@@ -133,11 +133,11 @@ def download_file(file_id):
     fh = io.BytesIO()
     downloader = MediaIoBaseDownload(fh, request)
     done = False
-    logger.info("Begin downloading %s", file_id)
+    logger.debug("Begin downloading %s", file_id)
     while done is False:
         status, done = downloader.next_chunk()
         logger.debug("Download %d%%. of %s", int(status.progress() * 100), file_id)
-    logger.info("Done downloading %s", file_id)
+    logger.debug("Done downloading %s", file_id)
     return fh.getvalue()
 
 
@@ -182,7 +182,7 @@ def upload_file(file_ref, file_source, file_folder):
             logger.debug("Uploaded %d%%." % int(status.progress() * 100))
 
     logger.debug("Uploaded 100%")
-    logger.info('File finished loading')
+    logger.info('Finished loading file %s', file_metadata['name'])
 
 
 def get_sql_files(folder_id):

@@ -1,10 +1,10 @@
-**SheetsETL**
+# SheetsETL
 
 This a tool that runs a series of .sql files within a Google drive folder, and writes the results as a native google sheet into another folder.
 This serves as a simple ETL tool that the spreadsheet type people can then slice the data how they like.
 A lot of the code is actually copy/paste from from various Google API examples, we're just piecing it together.
 
-**Setup**
+## Setup
 
 1. Setup your OAUTH 2.0 [server-side flow](https://developers.google.com/drive/v2/web/auth/web-server) in the Google devleopers console.
 When you've finished the setup at Google, place the `client_secrets.json` file you downloaded in the directory with
@@ -29,7 +29,7 @@ When you've finished the setup at Google, place the `client_secrets.json` file y
     `SHEET_DEST=0B_jczERcXKwsYzVsNHFIMDktZ2c`
 6. Optional, install [Drive Notepad](https://chrome.google.com/webstore/detail/drive-notepad/gpgjomejfimnbmobcocilppikhncegaj) to make editing of SQL files easier directly in the google drive web interface.
 
-**Usage**
+## Usage
 
 Create a plain text file with the .sql extension in the `SQL_SOURCE`, then run the loader.py script.
 The script will iterate through all .sql files in the `SQL_SOURCE` folder, execute the query contained
@@ -55,12 +55,12 @@ Additionally there is a Docker image [stickystyle/sheetsetl](https://hub.docker.
       SHEET_DEST=0B_jczERcXKwsYzVsNHFIMDktZ2c \
       stickystyle/sheetsetl
 
-**Limitations**
+## Limitations
 
 [Google sheets has a limitation](https://support.google.com/drive/answer/37603?hl=en) of two million cells per spreadsheet, this includes all of the sheets ('tabs')
 that exist in the spreadsheet. So be mindful of the amount of rows and columns your query returns.
 
-**Security Notice**
+## Security Notice
 
 With this tool, you are enabling anyone that has access to the SQL_SOURCE folder to be
 able to write queries to your server, you need to think about your data security before you distribuite
@@ -80,3 +80,5 @@ currently needs three permission scopes as documented [here](https://developers.
     - Per-file access to files created or opened by the app
   - `https://www.googleapis.com/auth/drive.readonly`
     - Allows read-only access to file metadata and file content
+
+

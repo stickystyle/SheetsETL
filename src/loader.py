@@ -163,23 +163,27 @@ def upload_file(file_ref, file_source, file_folder):
             existing_id = ff.get('id')
 
     response = None
-    logger.info("Begin writing to google sheets")
-    if existing_id:
-        logger.debug("Found existing sheet: %s, will update it" % existing_id)
-        del file_metadata['parents']  # .update() doesn't allow 'parents' prop
-        request = service.files().update(fileId=existing_id,
-                                         body=file_metadata,
-                                         media_body=media,
-                                         fields='id')
-    else:
-        logger.debug("Writing new sheet")
-        request = service.files().create(body=file_metadata,
-                                         media_body=media,
-                                         fields='id')
-    while response is None:
-        status, response = request.next_chunk()
-        if status:
-            logger.debug("Uploaded %d%%." % int(status.progress() * 100))
+    logger.debug("Begin writing to google sheets")
+    try:
+        if existing_id:
+            logger.debug("Found existing sheet: %s, will update it" % existing_id)
+            del file_metadata['parents']  # .update() doesn't allow 'parents' prop
+            request = service.files().update(fileId=existing_id,
+                                             body=file_metadata,
+                                             media_body=media,
+                                             fields='id')
+        else:
+            logger.debug("Writing new sheet")
+            request = service.files().create(body=file_metadata,
+                                             media_body=media,
+                                             fields='id')
+        while response is None:
+            status, response = request.next_chunk()
+            if status:
+                logger.debug("Uploaded %d%%." % int(status.progress() * 100))
+    except apiclient.errors.HttpError as e:
+        logger.error(e)
+        return None
 
     logger.debug("Uploaded 100%")
     logger.info('Finished loading file %s', file_metadata['name'])

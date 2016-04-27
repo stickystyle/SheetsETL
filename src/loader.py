@@ -84,12 +84,15 @@ def get_credentials():
 
     :return: Credentials, the obtained credential.
     """
-    home_dir = os.path.expanduser('~')
-    credential_dir = os.path.join(home_dir, '.credentials')
-    if not os.path.exists(credential_dir):
-        os.makedirs(credential_dir)
-    credential_path = os.path.join(credential_dir,
+    if not os.environ.get('CREDENTIALS_FILE'): 
+        home_dir = os.path.expanduser('~')
+        credential_dir = os.path.join(home_dir, '.credentials')
+        if not os.path.exists(credential_dir):
+            os.makedirs(credential_dir)
+        credential_path = os.path.join(credential_dir,
                                    'sheets-etl.json')
+    else:
+        credential_path = os.environ.get('CREDENTIALS_FILE')
 
     store = oauth2client.file.Storage(credential_path)
     credentials = store.get()
